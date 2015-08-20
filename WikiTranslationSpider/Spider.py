@@ -9,12 +9,12 @@ import markdown2
 import gevent
 from LitePage import LitePage
 import smtplib
+import argparse
 from email.mime.text import MIMEText
 
 class ConfigSpider():
     def __init__(self, config):
-        with open(config, 'r') as f:
-            self.config = json.load(f)
+        self.config = json.loads(config.read())
         address = (self.config["protocol"],self.config["URL"])
         path = self.config['path']
         self.Site = mwclient.Site(address,path)
@@ -152,7 +152,15 @@ class ConfigSpider():
         mail.join()
 
 def main():
-    Spider = ConfigSpider("config.json");
+    parser = argparse.ArgumentParser(
+        description='pyredis client'
+    )
+    parser.add_argument(
+        'config',
+        type=argparse.FileType('r'),
+    )
+    arg = parser.parse_args()
+    Spider = ConfigSpider(arg.config);
     Spider.main()
 
 if __name__ == '__main__':
