@@ -1,0 +1,19 @@
+{
+  "protocol": "https",
+  "URL": "wiki.archlinux.org",
+  "path": "/",
+  "originLang": "en",
+  "TranslateLang": "zh_cn",
+  "suffix": "_(简体中文)",
+  "translateme": "Translateme (简体中文)",
+  "route": "/index.php/",
+  "mhost": "smtp.163.com",
+  "muser": "FFFF@163.com",
+  "mport": 587,
+  "mpasswd": "FFF",
+  "subject": "翻译情况汇总",
+  "sender": "Wikibot",
+  "receivers": [
+    "ak47m61@gmail.com"
+  ]
+}

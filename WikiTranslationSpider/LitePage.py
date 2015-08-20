@@ -1,6 +1,7 @@
 #!/usr/bin/python2
 # coding=utf-8
 
+# 精简版mwclient的page，试图减少内存占用，然并卵。
 class LitePage():
     def __init__(self, page, config):
         self.page_title = page.page_title
@@ -15,7 +16,7 @@ class LitePage():
             page.normalize_title(page.page_title)
         ])
         self.translateme = False
-        if config['translateme'] is not None:
+        if config.get('translateme', None) is not None:
             for template in page.templates():
                 if template.page_title == config['translateme']:
                     self.translateme = True
