@@ -128,6 +128,7 @@ class ConfigSpider():
             return -1
         else:
             return 1
+
     # 将结果先转化为markdown再导出为html
     def format_to_html(self,PagesToTranslate):
         markdown_content = [u'',u'|原文|翻译|状态|\n|---|---|---|\n']
