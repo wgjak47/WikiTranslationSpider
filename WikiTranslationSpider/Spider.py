@@ -151,7 +151,10 @@ class ConfigSpider():
         mail = gevent.spawn(self.send_mail,PagesToTranslate)
         mail.join()
 
-if __name__ == '__main__':
+def main():
     Spider = ConfigSpider("config.json");
     Spider.main()
+
+if __name__ == '__main__':
+    main()
 
