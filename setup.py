@@ -12,6 +12,11 @@ setup(name='WikiTranslationBot',
       keywords='mediawiki spider translation',
       author='wgjak47',
       author_email='wgjak47@gmail.com',
+      entry_points={
+          'console_scripts':[
+            'Spider = WikiTranslationSpider.Spider:main'
+          ]
+      },
       url='https://github.com/wgjak47/WikiTranslationSpider',
       license='MIT',
       packages=['WikiTranslationSpider'],
