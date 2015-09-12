@@ -50,3 +50,4 @@ python setup.py install
 api通过catelogy获取的结果中有点的还是Catelogy，比较复杂的递归关系，推迟。
 
 ##新分支on_text解决内存占用问题。
+TODO: 更加美观的汇总页面（前端苦手TAT）
