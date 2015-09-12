@@ -48,3 +48,5 @@ python setup.py install
 打算改用gevent.pool,研究中。
 3. 按指定Catelogy获取待翻译页面。
 api通过catelogy获取的结果中有点的还是Catelogy，比较复杂的递归关系，推迟。
+
+##新分支on_text解决内存占用问题。
