@@ -6,5 +6,8 @@ for i in page.templates():
     print i.page_title
 print page.pagelanguage
 print page.touched
+revs = page.revisions(prop='timestamp', limit=1, section=None, expandtemplates=None)
+rev = revs.next()
+print rev['timestamp']
 page.text()
 print page.last_rev_time
