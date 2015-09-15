@@ -42,12 +42,13 @@ python setup.py install
 
 
 ##TODO
-1. 简单的log 
-完成
+1. ~简单的log~ 
 2. 内存占用
-打算改用gevent.pool,研究中。
+~打算改用gevent.pool。~
 3. 按指定Catelogy获取待翻译页面。
-api通过catelogy获取的结果中有点的还是Catelogy，比较复杂的递归关系，推迟。
+api通过catelogy获取的结果中有点的还是Catelogy，比较复杂的递归关系，放弃。
+4. 邮件功能增强
+5. 代码规范
+6. 更加美观的汇总页面（前端苦手TAT）
 
-##新分支on_text解决内存占用问题。
-TODO: 更加美观的汇总页面（前端苦手TAT）
+##新分支on_text解决内存占用，并且按时间排序问题。
