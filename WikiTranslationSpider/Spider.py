@@ -2,19 +2,22 @@
 # coding=utf-8
 from gevent import monkey
 monkey.patch_all()
-import mwclient
+
 import json
+import logging
 import time
-import markdown2
-import gevent
-from LitePage import LitePage
 import smtplib
 import argparse
 from email.mime.text import MIMEText
 from logging import getLogger
-import logging
 
-def SpiderLogger():
+import mwclient
+import markdown2
+import gevent
+
+from LitePage import LitePage
+
+def SpiderLogger(Object):
     logger = getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     handler = logging.StreamHandler()
