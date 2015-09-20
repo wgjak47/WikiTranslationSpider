@@ -45,6 +45,8 @@ python setup.py install
 1. ~简单的log~ 
 2. 内存占用
 ~打算改用gevent.pool。~
+内存占用降到160MB，同时运行时间保持在1分30s左右。
+测试平台：i7 4710M , \*8G , ubuntu linux
 3. 按指定Catelogy获取待翻译页面。
 api通过catelogy获取的结果中有点的还是Catelogy，比较复杂的递归关系，放弃。
 4. 邮件功能增强

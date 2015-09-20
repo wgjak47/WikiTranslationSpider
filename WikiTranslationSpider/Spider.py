@@ -30,6 +30,14 @@ def SpiderLogger(Object):
 logger = SpiderLogger()
 
 class ConfigSpider():
+
+    @staticmethod
+    def Pages_to_dict(pages):
+        pages_dict = dict()
+        for page in pages:
+            pages_dict[page.page_title] = page
+        return pages_dict
+
     def __init__(self):
         logger.info('Spider start')
         parser = argparse.ArgumentParser(
@@ -45,6 +53,7 @@ class ConfigSpider():
         address = (self.config["protocol"],self.config["URL"])
         path = self.config['path']
         self.Site = mwclient.Site(address,path)
+        self.Pages = self.Pages_to_dict(self.Site.Pages)
 
     # 过滤函数，用于找出源语言页面。通过pagelanguage属性判别
     def filter(self, page):
@@ -57,8 +66,9 @@ class ConfigSpider():
     def add_page(self, page, TranslationPages):
         title = page.page_title
         suffix = self.config['suffix']
-        translation = self.Site.Pages[u''.join([title,suffix])]
-        logger.debug('get %s page' % translation.page_title)
+        key = u''.join([title, suffix])
+        translation = self.Pages[key] if self.Pages.has_key(key) \
+            else self.Site.Pages[key]
         TranslationPages.append(
             (
                 LitePage(page,self.config),
@@ -68,25 +78,27 @@ class ConfigSpider():
 
     # 获取翻译页面，由于一个一个找比较慢，使用了gevent提高并发，但是
     # 带来了内存问题。800MB Orz
+    # 使用gevent.pool解决内存问题。
     def get_translation_page(self,OriginPages):
         TranslationPages = []
-        task = [gevent.spawn(self.add_page,page,TranslationPages)
-                for page in OriginPages]
-        gevent.joinall(task, timeout=300)
-        logger.debug('get %s translation pages' % len(task))
+        task_pool = Pool(100)
+        for page in OriginPages:
+            task_pool.spawn(self.add_page,page,TranslationPages)
+        task_pool.join()
+        logger.debug('get %s translation pages' % len(OriginPages))
         return TranslationPages
 
     # 获取所有页面，通过filter获取。
     def get_origin_page(self):
         OriginPages = []
-        for page in self.Site.Pages:
+        for page in self.Pages.itervalues():
             if self.filter(page):
                 OriginPages.append(page)
         logger.info('get %s origin pages' % len(OriginPages))
         return OriginPages
 
     # 计算翻译时间和源语言更新时间之差
-    time_from_change = lambda self, x,y: time.mktime(x) - time.mktime(y)
+    time_from_change = lambda self, x, y: (time.mktime(x) - time.mktime(y)) // 3600
 
     # 对比源页面和翻译页面，根据特殊模版，翻译时间和翻译页面是否存在判断。
     def compare(self, o_page, t_page):
@@ -113,7 +125,7 @@ class ConfigSpider():
         o_page_x,t_page_x = x
         o_page_y,t_page_y = y
         if t_page_x.exists and t_page_y.exists:
-            if t_page_x.translateme is True and t_page_y.translateme is True:
+            if t_page_x.translateme is False and t_page_y.translateme is False:
                 x_time = self.time_from_change(
                     o_page_x.last_rev_time,
                     t_page_x.last_rev_time
@@ -150,8 +162,12 @@ class ConfigSpider():
                 markdown_content.append(u'需要翻译|')
             else:
                 markdown_content.append(u'已有%s小时未更新翻译|' %
-                    ((time.mktime(o_page.last_rev_time)
-                      - time.mktime(t_page.last_rev_time)) // 3600))
+                    (self.time_from_change(
+                        o_page.last_rev_time,
+                        t_page.last_rev_time
+                        )
+                    )
+                )
             markdown_content.append('\n')
         markdown_content = ''.join(markdown_content)
         return markdown2.markdown(markdown_content, extras=["tables"])
